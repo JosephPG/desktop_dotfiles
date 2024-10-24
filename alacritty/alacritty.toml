@@ -1,0 +1,6 @@
+[font]
+size = 9
+normal = { family = "Source Code Pro", style = "Regular" }
+
+[window]
+padding = { x = 10, y = 10 }

@@ -1,0 +1,271 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/polybar/polybar
+;
+;   The README contains a lot of information
+;
+;==========================================================
+
+[colors]
+background = #1f1f1f
+background-alt = #373B41
+foreground = #C5C8C6
+primary = #F0C674
+secondary = #7a7a7a
+alert = #A54242
+disabled = #707880
+
+[bar/main]
+monitor = HDMI-0
+width = 99%
+height = 22pt
+radius = 1
+offset-y = 0.5%
+offset-x = 0.5%
+
+; dpi = 96
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+font-0 = "Source Code Pro Semibold:size=8;1"
+font-1 = "Font Awesome 6 Free:style=Solid:size=10;1"
+font-2 = "Font Awesome 6 Brands:style=size=8;1"
+font-3 = "Source Han Sans JP Medium:size=8;1"
+
+modules-right = spotify spotify-prev spotify-play-pause spotify-next updates pulseaudio date
+modules-left = eth cpu memory xworkspaces gmail nautilus configs
+
+enable-ipc = true
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+; wm-restack = generic
+; wm-restack = bspwm
+; wm-restack = i3
+
+[module/systray]
+type = internal/tray
+
+format-margin = 8pt
+tray-spacing = 16pt
+
+[module/xworkspaces]
+type = internal/xworkspaces
+
+label-active = 
+label-active-underline= ${colors.primary}
+label-active-padding = 1
+
+label-occupied = 
+label-occupied-padding = 1
+
+label-urgent = %name%
+label-urgent-padding = 1
+
+label-empty = 
+label-empty-foreground = ${colors.disabled}
+label-empty-padding = 1
+
+format-background = #263238
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:60:...%
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %{F#F0C674}%mountpoint%%{F-} %percentage_used%%
+
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.disabled}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-background = #455a64
+format-volume-padding = 2
+
+label-volume = %percentage%%
+label-muted = ""
+label-muted-background = #455a64
+label-muted-padding = 2
+
+ramp-volume-0 = ""
+ramp-volume-1 = ""
+ramp-volume-2 = ""
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+label-layout = %layout%
+label-layout-foreground = ${colors.primary}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-foreground = ${colors.background}
+label-indicator-background = ${colors.secondary}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-background = #1b2529
+
+format-padding = 1
+label = %percentage_used:2%%
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = ""
+format-background = #1b2529
+format-padding = 1
+label = %percentage:2%%
+
+[network-base]
+type = internal/network
+interval = 5
+format-connected = <label-connected>
+format-connected-background = #1b2529
+format-connected-padding = 1
+format-disconnected = <label-disconnected>
+format-disconnected-background = #1b2529
+format-disconnected-padding = 1
+
+label-disconnected = %{F#F0C674}%ifname%%{F#707880} disconnected
+
+[module/wlan]
+inherit = network-base
+interface-type = wireless
+label-connected = %{F#F0C674}%ifname%%{F-} %essid% %local_ip%
+label-disconnected = ""
+
+[module/eth]
+inherit = network-base
+interface-type = wired
+label-connected = ""
+label-disconnected = ""
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = %a %d %b, %H:%M
+
+label = %date%
+format-prefix = " " 
+format-background = #37474f
+format-padding = 2
+
+[module/updates]
+type = custom/script
+exec = ~/.config/polybar/scripts/check_updates.sh
+interval = 60
+label = %output%
+format = <label>
+format-prefix = " "
+format-background = #607d8b
+format-padding = 2
+
+[module/links]
+type = custom/text
+content-foreground = #686868
+content-padding = 2
+
+[module/gmail]
+inherit = module/links
+content = 
+click-left = firefox https://www.gmail.com/ &
+
+[module/nautilus]
+type = custom/script
+format-foreground = #686868
+format-padding = 2
+exec = "echo ''"
+click-left = "nautilus"
+
+[module/configs]
+type = custom/menu
+expand-left = true
+format-padding = 2
+format-spacing = 1
+
+label-open = 
+label-open-foreground = #686868
+
+menu-0-0 = Picom
+menu-0-0-exec = "emacs ~/.config/picom.conf"
+menu-0-1 = Polybar
+menu-0-1-exec = "emacs ~/.config/polybar/config.ini"
+menu-0-2 = Awesome
+menu-0-2-exec = "emacs ~/.config/awesome/rc.lua"
+menu-0-3 = Rofi
+menu-0-3-exec = "emacs ~/.config/rofi/config.rasi"
+menu-0-4 = Alx_xtty
+menu-0-4-exec = "emacs ~/.config/alacritty/alacritty.toml"
+menu-0-5 = Xprofile
+menu-0-5-exec = "emacs ~/.xprofile"
+menu-0-6 = Zsh
+menu-0-6-exec = "emacs ~/.zshrc"
+menu-0-7 = Theme
+menu-0-7-exec = "emacs ~/.p10k.zsh"
+
+[module/spotify]
+type = custom/script
+tail = true
+interval = 1
+; prefix symbol is shown before the text
+format-prefix = " "
+format = <label>
+format-padding = 2
+format-background = #78909c 
+exec = ~/.config/polybar/scripts/scroll_spotify_status.sh
+
+[module/spotify-prev]
+type = custom/script
+exec = echo ""
+format = <label>
+format-padding = 2
+format-background = #78909c
+click-left = playerctl previous -p spotify
+
+[module/spotify-play-pause]
+type = custom/ipc
+hook-0 = echo ""
+hook-1 = echo ""
+format-padding = 2
+initial = 1
+format-background = #78909c
+click-left = playerctl play-pause -p spotify
+
+[module/spotify-next]
+type = custom/script
+exec = echo ""
+format = <label>
+format-padding = 2
+format-background = #78909c
+click-left = playerctl next -p spotify
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = false
+
+; vim:ft=dosini
+
